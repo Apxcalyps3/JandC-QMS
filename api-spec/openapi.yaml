@@ -1,0 +1,818 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: JandC QMS - Print Queue Management System API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: orders
+    description: Order management
+  - name: queue
+    description: Queue management
+  - name: services
+    description: Service configuration
+  - name: customers
+    description: Customer records
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /orders:
+    get:
+      operationId: listOrders
+      tags: [orders]
+      summary: List all orders
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: serviceType
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: paymentStatus
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+    post:
+      operationId: createOrder
+      tags: [orders]
+      summary: Create a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+
+  /orders/{id}:
+    get:
+      operationId: getOrder
+      tags: [orders]
+      summary: Get a single order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Order found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+
+    patch:
+      operationId: updateOrder
+      tags: [orders]
+      summary: Update an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+
+    delete:
+      operationId: deleteOrder
+      tags: [orders]
+      summary: Delete/cancel an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /orders/{id}/status:
+    patch:
+      operationId: updateOrderStatus
+      tags: [orders]
+      summary: Update order status (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderStatusUpdate"
+      responses:
+        "200":
+          description: Status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+
+  /orders/{id}/payment:
+    patch:
+      operationId: verifyOrderPayment
+      tags: [orders]
+      summary: Admin verify or reject payment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentVerification"
+      responses:
+        "200":
+          description: Payment status updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+
+  /orders/track/{orderNumber}:
+    get:
+      operationId: trackOrder
+      tags: [orders]
+      summary: Track order by order number (customer)
+      parameters:
+        - name: orderNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+
+  /orders/stats/summary:
+    get:
+      operationId: getOrderStats
+      tags: [orders]
+      summary: Order statistics summary (admin dashboard)
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderStats"
+
+  /orders/analytics:
+    get:
+      operationId: getOrderAnalytics
+      tags: [orders]
+      summary: Detailed analytics — timing, throughput, hourly breakdown
+      responses:
+        "200":
+          description: Analytics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderAnalytics"
+
+  /queue:
+    get:
+      operationId: getQueue
+      tags: [queue]
+      summary: Get live queue with telemetry
+      responses:
+        "200":
+          description: Queue state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueState"
+
+  /queue/estimate:
+    get:
+      operationId: getQueueEstimate
+      tags: [queue]
+      summary: Get queue wait estimate for customer
+      parameters:
+        - name: printColor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: pageCount
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: copies
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Queue estimate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueEstimate"
+
+  /queue/reorder:
+    patch:
+      operationId: reorderQueue
+      tags: [queue]
+      summary: Reorder queue (admin manual override)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QueueReorderInput"
+      responses:
+        "200":
+          description: Queue reordered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueueState"
+
+  /services:
+    get:
+      operationId: listServices
+      tags: [services]
+      summary: List all services
+      responses:
+        "200":
+          description: Services list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Service"
+    post:
+      operationId: createService
+      tags: [services]
+      summary: Create a service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+
+  /services/{id}:
+    patch:
+      operationId: updateService
+      tags: [services]
+      summary: Update a service
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "404":
+          description: Not found
+
+    delete:
+      operationId: deleteService
+      tags: [services]
+      summary: Delete a service
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /customers:
+    get:
+      operationId: listCustomers
+      tags: [customers]
+      summary: List all customers (admin)
+      responses:
+        "200":
+          description: Customers list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Customer"
+
+  /files/{filename}:
+    get:
+      operationId: getFile
+      tags: [orders]
+      summary: Get uploaded file
+      parameters:
+        - name: filename
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: File content
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+
+    Order:
+      type: object
+      required:
+        - id
+        - orderNumber
+        - serviceType
+        - status
+        - customerName
+        - email
+        - createdAt
+        - queuePosition
+        - pageCount
+        - fileCount
+        - paymentStatus
+      properties:
+        id:
+          type: integer
+        orderNumber:
+          type: string
+        serviceType:
+          type: string
+          description: "printing | id-picture"
+        status:
+          type: string
+          description: "pending | processing | completed | cancelled"
+        customerName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        paperSize:
+          type: ["string", "null"]
+          description: "A4 | Short | Long"
+        printColor:
+          type: ["string", "null"]
+          description: "bw | colored"
+        copies:
+          type: integer
+        backToBack:
+          type: boolean
+        photoSize:
+          type: ["string", "null"]
+          description: "1x1 | 2x2 | Passport"
+        pageCount:
+          type: integer
+        fileCount:
+          type: integer
+        queuePosition:
+          type: integer
+        estimatedMinutes:
+          type: integer
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/UploadedFile"
+        pickupTime:
+          type: ["string", "null"]
+          description: "ISO datetime string for scheduled pickup"
+        paymentMethod:
+          type: string
+          description: "counter | online"
+        totalAmount:
+          type: integer
+          description: "Total amount in PHP pesos"
+        paymentReference:
+          type: ["string", "null"]
+          description: "GCash/Maya reference number"
+        paymentReceiptFilename:
+          type: ["string", "null"]
+        paymentReceiptUrl:
+          type: ["string", "null"]
+        paymentStatus:
+          type: string
+          description: "pending | verified | rejected | counter"
+        paymentAdminNote:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+
+    OrderInput:
+      type: object
+      required:
+        - serviceType
+        - customerName
+        - email
+        - files
+      properties:
+        serviceType:
+          type: string
+        customerName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        paperSize:
+          type: string
+        printColor:
+          type: string
+        copies:
+          type: integer
+        photoSize:
+          type: string
+        files:
+          type: array
+          items:
+            type: string
+          description: Array of uploaded file IDs/filenames
+        pickupTime:
+          type: string
+          description: "ISO datetime string for scheduled pickup"
+        paymentMethod:
+          type: string
+          description: "counter | online"
+        totalAmount:
+          type: integer
+          description: "Total amount in PHP pesos"
+        paymentReference:
+          type: string
+        paymentReceiptFilename:
+          type: string
+
+    OrderUpdate:
+      type: object
+      properties:
+        customerName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        paperSize:
+          type: string
+        printColor:
+          type: string
+        copies:
+          type: integer
+        photoSize:
+          type: string
+
+    OrderStatusUpdate:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+
+    PaymentVerification:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          description: "approve | reject"
+        adminNote:
+          type: string
+
+    OrderStats:
+      type: object
+      required:
+        - todayTotal
+        - pending
+        - processing
+        - completed
+        - cancelled
+        - byService
+        - pendingPayment
+      properties:
+        todayTotal:
+          type: integer
+        pending:
+          type: integer
+        processing:
+          type: integer
+        completed:
+          type: integer
+        cancelled:
+          type: integer
+        pendingPayment:
+          type: integer
+        byService:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceCount"
+        avgProcessingMinutes:
+          type: number
+
+    ServiceCount:
+      type: object
+      required: [serviceType, count]
+      properties:
+        serviceType:
+          type: string
+        count:
+          type: integer
+
+    HourlyCount:
+      type: object
+      required: [hour, count]
+      properties:
+        hour:
+          type: integer
+        count:
+          type: integer
+
+    OrderAnalytics:
+      type: object
+      required:
+        - avgWaitMinutes
+        - avgProcessingMinutes
+        - avgTotalMinutes
+        - completionRate
+        - todayTotal
+        - todayCompleted
+        - totalAllTime
+        - completedAllTime
+        - hourlyBreakdown
+      properties:
+        avgWaitMinutes:
+          type: number
+          description: Avg minutes from order placed to processing started
+        avgProcessingMinutes:
+          type: number
+          description: Avg minutes from processing started to completed
+        avgTotalMinutes:
+          type: number
+          description: Avg total minutes from order placed to completed
+        completionRate:
+          type: number
+          description: Percentage of today's orders completed
+        todayTotal:
+          type: integer
+        todayCompleted:
+          type: integer
+        totalAllTime:
+          type: integer
+        completedAllTime:
+          type: integer
+        peakHour:
+          type: ["integer", "null"]
+          description: Hour of day (0-23) with most orders today
+        hourlyBreakdown:
+          type: array
+          items:
+            $ref: "#/components/schemas/HourlyCount"
+
+    QueueState:
+      type: object
+      required:
+        - activeCount
+        - avgWaitMinutes
+        - orders
+      properties:
+        activeCount:
+          type: integer
+        avgWaitMinutes:
+          type: number
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/Order"
+
+    QueueEstimate:
+      type: object
+      required:
+        - queueLength
+        - estimatedWaitMinutes
+        - utilizationPercent
+        - readyByTime
+      properties:
+        queueLength:
+          type: integer
+        estimatedWaitMinutes:
+          type: integer
+        utilizationPercent:
+          type: number
+        readyByTime:
+          type: string
+          description: "ISO datetime string when order could be ready"
+
+    QueueReorderInput:
+      type: object
+      required: [orderedIds]
+      properties:
+        orderedIds:
+          type: array
+          items:
+            type: integer
+
+    Service:
+      type: object
+      required:
+        - id
+        - name
+        - slug
+        - description
+        - estimatedMinutes
+        - isActive
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        estimatedMinutes:
+          type: integer
+        isActive:
+          type: boolean
+
+    ServiceInput:
+      type: object
+      required:
+        - name
+        - slug
+        - description
+        - estimatedMinutes
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        estimatedMinutes:
+          type: integer
+        isActive:
+          type: boolean
+
+    ServiceUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        estimatedMinutes:
+          type: integer
+        isActive:
+          type: boolean
+
+    Customer:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - totalOrders
+        - createdAt
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        totalOrders:
+          type: integer
+        createdAt:
+          type: string
+
+    UploadedFile:
+      type: object
+      required:
+        - filename
+        - originalName
+        - mimeType
+        - size
+        - url
+        - assetType
+      properties:
+        filename:
+          type: string
+        originalName:
+          type: string
+        mimeType:
+          type: string
+        size:
+          type: integer
+        url:
+          type: string
+        assetType:
+          type: string
+          description: "document | image"
+        pageCount:
+          type: ["integer", "null"]
