@@ -1,0 +1,1 @@
+{"version":3,"file":"queueEstimate.d.ts","sourceRoot":"","sources":["../../../src/generated/types/queueEstimate.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AAEH,MAAM,WAAW,aAAa;IAC5B,WAAW,EAAE,MAAM,CAAC;IACpB,oBAAoB,EAAE,MAAM,CAAC;IAC7B,kBAAkB,EAAE,MAAM,CAAC;IAC3B,oDAAoD;IACpD,WAAW,EAAE,MAAM,CAAC;CACrB"}

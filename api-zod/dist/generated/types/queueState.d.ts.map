@@ -1,0 +1,1 @@
+{"version":3,"file":"queueState.d.ts","sourceRoot":"","sources":["../../../src/generated/types/queueState.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AACH,OAAO,KAAK,EAAE,KAAK,EAAE,MAAM,SAAS,CAAC;AAErC,MAAM,WAAW,UAAU;IACzB,WAAW,EAAE,MAAM,CAAC;IACpB,cAAc,EAAE,MAAM,CAAC;IACvB,MAAM,EAAE,KAAK,EAAE,CAAC;CACjB"}
