@@ -1,0 +1,20 @@
+create a sample system having this specifications,
+1. Customer Module Specifications
+• File Upload & Access
+Web-Centric Access: The system is accessed exclusively via a responsive Web App using a direct URL link or by scanning a localized QR code.
+Single-Channel Upload: Supports online document and image submission directly through the Web App interface.
+File Format Filters: Accepts .pdf, .docx, .xlsx, and .pptx for documents; .jpeg, .jpg, and .png for images. Invalid file types are blocked automatically at upload.
+• Print Configuration & Interactive Preview
+Manual Print Settings: Allows customers to explicitly configure:
+Paper Size: Restricted to A4, Short, and Long sizes only.
+Print Color: Toggle between B&W (Black and White) and Colored print.
+Asset Classification: Automatically tags uploads as either a Document or an Image for system routing.
+Dynamic Print Preview & In-App Editing: Displays a real-time, client-side visual preview of the file reflecting the chosen color and paper size selections. If the preview does not look correct, customers can adjust settings or utilize direct in-app editing capabilities to modify and fit the file directly within the web app interface before submission.
+• Queue Telemetry & Order Tracking
+Pre-Placement Tracking: The system dynamically monitors the current queue length to provide users with a queue line so they will be informed if their order will take longer to process.
+Automated Notifications: Triggers an immediate web app notification (or alert) the exact moment their order status switches to finished, ensuring customers only walk to the shop once their prints are ready.
+2. Admin/Moderator Module Specifications
+• Queue Dashboard & Advanced Management
+Live Order Metrics: Displays a comprehensive dashboard showing the total number of orders currently in the system, their exact arrival times, total number of pages, number of files, and their exact print specifications.
+Multi-Layered Sorting & Manual Processing: Allows administrators to dynamically sort, filter, and rearrange the queue based on Arrival Time, Number of Pages, or any specific print criteria (e.g., paper size, color mode). This grants admins the freedom to selectively override standard order and choose exactly which job they want to process next.
+Order Placement Notification: Triggers a real-time system alert the exact moment a new order is submitted by a customer so admins can begin processing it right away.
