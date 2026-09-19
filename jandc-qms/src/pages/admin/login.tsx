@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { Printer, Lock, Eye, EyeOff } from "lucide-react";
+import { Lock, Eye, EyeOff } from "lucide-react";
+import { JNConnectLogo } from "@/components/ui/jnconnect-logo";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,13 +42,9 @@ export function AdminLogin() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm space-y-6">
         {/* Logo */}
-        <div className="flex flex-col items-center gap-3">
-          <div className="bg-secondary text-secondary-foreground p-3 rounded-xl">
-            <Printer className="w-8 h-8 text-primary" />
-          </div>
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-secondary">JandC Admin</h1>
-            <p className="text-sm text-muted-foreground">Print Queue Management</p>
+        <div className="flex flex-col items-center gap-2">
+          <div className="bg-white p-3.5 px-5 rounded-2xl shadow-md border flex items-center justify-center">
+            <JNConnectLogo variant="full" className="h-14 w-auto max-w-[280px] object-contain" />
           </div>
         </div>
 

@@ -13,8 +13,14 @@ export type CheckoutValidation = {
 
 export function validateCheckoutContact(
   paymentMethod: PaymentMethod,
-  email: string
+  email: string,
+  orderMode?: "walk-in" | "scheduled"
 ): CheckoutValidation {
+  // For walk-in orders, order number is used for customer tracking instead of names/emails/phones
+  if (orderMode === "walk-in") {
+    return { valid: true };
+  }
+
   if (paymentMethod === "online" && !email.trim()) {
     return {
       valid: false,
@@ -25,16 +31,26 @@ export function validateCheckoutContact(
   return { valid: true };
 }
 
+export const LARGE_ORDER_PAGE_THRESHOLD = 25;
+
+export function isLargePrintOrder(pageCount: number, copies: number): boolean {
+  return (pageCount * copies) >= LARGE_ORDER_PAGE_THRESHOLD || copies >= 15;
+}
+
 export function validatePaymentRequirements({
   paymentMethod,
   paymentReference,
   hasReceipt,
   copies,
+  receiptAmount,
+  totalCost,
 }: {
   paymentMethod: PaymentMethod | null;
   paymentReference: string;
   hasReceipt: boolean;
   copies?: number | null;
+  receiptAmount?: number | null;
+  totalCost?: number | null;
 }): CheckoutValidation {
   if (!paymentMethod) {
     return {
@@ -64,6 +80,21 @@ export function validatePaymentRequirements({
     };
   }
 
+  if (
+    paymentMethod === "online" &&
+    totalCost !== undefined &&
+    totalCost !== null &&
+    receiptAmount !== undefined &&
+    receiptAmount !== null
+  ) {
+    if (Math.abs(receiptAmount - totalCost) > 0.01) {
+      return {
+        valid: false,
+        message: `Submitted receipt amount (₱${receiptAmount.toFixed(2)}) must be equal to the calculated cost (₱${totalCost.toFixed(2)}) in order for the order to be placed.`,
+      };
+    }
+  }
+
   return { valid: true };
 }
 
@@ -77,10 +108,19 @@ export function getNextOrderStatus(status: string): OrderStatus | null {
   return null;
 }
 
+export function isValidOrderNumber(orderNumber: string): boolean {
+  return /^\d{3}$/.test(orderNumber.trim());
+}
+
+export function formatOrderNumber(input: string | number): string {
+  const digits = String(input).replace(/\D/g, "").slice(0, 3);
+  return digits;
+}
+
 export const ADMIN_NAV_ITEMS = [
-  { href: "/admin", label: "Dashboard", icon: "dashboard" },
-  { href: "/admin/orders", label: "Orders", icon: "orders" },
-  { href: "/admin/queue", label: "Queue", icon: "queue" },
-  { href: "/admin/payments", label: "Payments", icon: "payments" },
-  { href: "/admin/analytics", label: "Analytics", icon: "analytics" },
+  { href: "/admin", label: "Home (Control Center)", icon: "home" },
+  { href: "/admin/live-queue", label: "Live Queue Telemetry", icon: "liveQueue" },
+  { href: "/admin/scheduled", label: "Scheduled Telemetry", icon: "scheduled" },
+  { href: "/admin/history", label: "History & Revenue", icon: "history" },
+  { href: "/admin/settings", label: "Settings & Security", icon: "settings" },
 ] as const;

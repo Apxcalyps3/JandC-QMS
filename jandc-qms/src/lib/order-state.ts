@@ -3,6 +3,8 @@ import { UploadedFile } from "@workspace/api-client-react";
 
 export type OrderState = {
   serviceType: "printing" | "id-picture" | null;
+  orderMode?: "walk-in" | "scheduled";
+  orderNumber?: string;
   customerName: string;
   email: string;
   phone?: string;
@@ -11,11 +13,14 @@ export type OrderState = {
   copies?: number;
   photoSize?: string;
   files: UploadedFile[];
+  // File customizations in system
+  fileEdits?: Record<string, { rotation?: number; filter?: string; pageRange?: string }>;
   // Scheduling
   pickupTime?: string;
   // Payment
   paymentMethod?: "counter" | "online";
   totalAmount?: number;
+  receiptAmount?: number;
   paymentReference?: string;
   paymentReceiptFilename?: string;
   paymentReceiptUrl?: string;
@@ -23,6 +28,8 @@ export type OrderState = {
 
 const defaultState: OrderState = {
   serviceType: null,
+  orderMode: "walk-in",
+  orderNumber: "",
   customerName: "",
   email: "",
   phone: "",
@@ -31,9 +38,11 @@ const defaultState: OrderState = {
   copies: 1,
   photoSize: "1x1",
   files: [],
+  fileEdits: {},
   pickupTime: undefined,
   paymentMethod: undefined,
   totalAmount: undefined,
+  receiptAmount: undefined,
   paymentReference: "",
   paymentReceiptFilename: "",
   paymentReceiptUrl: "",

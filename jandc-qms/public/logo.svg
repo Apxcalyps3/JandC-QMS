@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 250" width="100%" height="100%" fill="none">
+  <defs>
+    <style>
+      .jn-red-stroke {
+        stroke: #8B1D24;
+        stroke-width: 14;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .jn-red-flat {
+        stroke: #8B1D24;
+        stroke-width: 14;
+        stroke-linecap: butt;
+        stroke-linejoin: round;
+      }
+      .jn-red-fill {
+        fill: #8B1D24;
+      }
+      .jn-brand-title {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 56px;
+        font-weight: 800;
+        fill: #000000;
+        letter-spacing: -0.02em;
+      }
+      .jn-brand-sub {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 19px;
+        font-weight: 500;
+        fill: #000000;
+        letter-spacing: -0.01em;
+      }
+    </style>
+  </defs>
+
+  <!-- EMBLEM GROUP (Left) -->
+  <g transform="translate(10, 10)">
+    <!-- 1. The Inner 'J': tip cap -> bowl -> vertical stem -> top horizontal bar -->
+    <path class="jn-red-stroke" d="M 52 140 C 52 166, 62 178, 82 178 C 96 178, 104 168, 104 146 L 104 92 L 130 92" />
+
+    <!-- 2. The Outer Continuous Ribbon: wraps under J -> arches high over N -> sweeps down -> curves up into Antenna -->
+    <path class="jn-red-stroke" d="M 26 148 C 26 186, 46 204, 82 204 C 114 204, 128 186, 128 148 L 128 118 C 128 76, 156 50, 194 50 C 218 50, 236 66, 254 106 L 272 148 C 280 166, 288 204, 312 204 C 324 204, 332 194, 332 178 L 332 136" />
+
+    <!-- 3. The Inner 'N': Two vertical stems with flat base cuts -->
+    <!-- Left vertical stem curving into diagonal -->
+    <path class="jn-red-flat" d="M 156 204 L 156 116" />
+    <path class="jn-red-stroke" d="M 156 116 C 156 94, 170 84, 188 98 L 246 166" />
+    
+    <!-- Right vertical stem -->
+    <path class="jn-red-flat" d="M 182 204 L 182 120" />
+
+    <!-- 4. Antenna Transmitter Node -->
+    <circle class="jn-red-fill" cx="332" cy="125" r="9.5" />
+
+    <!-- 5. Broadcast Signal Waves (Upper-Right: 3 arcs) -->
+    <path class="jn-red-stroke" d="M 323 101 A 26 26 0 0 1 355 138" />
+    <path class="jn-red-stroke" d="M 316 82 A 46 46 0 0 1 372 148" />
+    <path class="jn-red-stroke" d="M 309 63 A 66 66 0 0 1 389 158" />
+
+    <!-- 6. Broadcast Signal Waves (Lower-Right: 2 arcs) -->
+    <path class="jn-red-stroke" d="M 349 145 A 26 26 0 0 1 321 149" />
+    <path class="jn-red-stroke" d="M 362 160 A 46 46 0 0 1 313 167" />
+  </g>
+
+  <!-- TYPOGRAPHY LOCKUP (Right) -->
+  <g transform="translate(415, 132)">
+    <text x="0" y="0" class="jn-brand-title">JNConnect</text>
+    <text x="2" y="32" class="jn-brand-sub">A QMS for JandC Internet Cafe and Services</text>
+  </g>
+</svg>

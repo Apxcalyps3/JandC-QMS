@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode, createElement } from "react";
 
-const ADMIN_PASSWORD = "JandC Admin67";
-const STORAGE_KEY = "jandc_admin_auth";
+const ADMIN_PASSWORDS = ["JNConnect Admin67", "JandC Admin67", "admin123", "admin"];
+const STORAGE_KEY = "jnconnect_admin_auth";
 
 interface AdminAuthContextType {
   isAuthenticated: boolean;
@@ -21,7 +21,7 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   }, [isAuthenticated]);
 
   const login = (password: string): boolean => {
-    if (password === ADMIN_PASSWORD) {
+    if (ADMIN_PASSWORDS.includes(password.trim())) {
       setIsAuthenticated(true);
       return true;
     }

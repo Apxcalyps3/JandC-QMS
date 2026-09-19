@@ -21,6 +21,10 @@ import { TrackOrder } from "@/pages/customer/track-order";
 // Admin Pages
 import { AdminLogin } from "@/pages/admin/login";
 import { Dashboard } from "@/pages/admin/dashboard";
+import { LiveQueue } from "@/pages/admin/live-queue";
+import { ScheduledTelemetry } from "@/pages/admin/scheduled";
+import { HistoryPanel } from "@/pages/admin/history";
+import { SettingsPanel } from "@/pages/admin/settings";
 import { Orders } from "@/pages/admin/orders";
 import { Queue } from "@/pages/admin/queue";
 import { Analytics } from "@/pages/admin/analytics";
@@ -51,11 +55,18 @@ function AdminRoutes() {
         <AdminGuard>
           <AdminLayout>
             <Switch>
+              {/* 5 SOP Core Admin Panels (SOP-QMS-2026-001 Section 5.1) */}
               <Route path="/admin" component={Dashboard} />
-              <Route path="/admin/orders" component={Orders} />
-              <Route path="/admin/queue" component={Queue} />
-              <Route path="/admin/analytics" component={Analytics} />
-              <Route path="/admin/payments" component={Payments} />
+              <Route path="/admin/live-queue" component={LiveQueue} />
+              <Route path="/admin/scheduled" component={ScheduledTelemetry} />
+              <Route path="/admin/history" component={HistoryPanel} />
+              <Route path="/admin/settings" component={SettingsPanel} />
+
+              {/* Backwards-compatible route aliases */}
+              <Route path="/admin/queue" component={LiveQueue} />
+              <Route path="/admin/orders" component={HistoryPanel} />
+              <Route path="/admin/analytics" component={HistoryPanel} />
+              <Route path="/admin/payments" component={HistoryPanel} />
               <Route component={NotFound} />
             </Switch>
           </AdminLayout>

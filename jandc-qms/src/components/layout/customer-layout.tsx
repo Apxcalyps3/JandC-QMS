@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { Printer, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
+import { JNConnectLogo } from "@/components/ui/jnconnect-logo";
 
 export function CustomerLayout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
@@ -8,12 +9,20 @@ export function CustomerLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="bg-secondary text-secondary-foreground border-b border-secondary-foreground/10 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto w-full flex items-center justify-between px-4 py-3 md:px-6">
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl hover:text-primary transition-colors">
-            <div className="bg-primary text-primary-foreground p-1.5 rounded-md">
-              <Printer className="w-5 h-5" />
+        <div className="h-1 bg-gradient-to-r from-primary via-sky-500 to-primary w-full" />
+        <div className="max-w-6xl mx-auto w-full flex items-center justify-between px-4 py-2.5 md:px-6">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-95 transition-opacity group">
+            <div className="bg-white p-1 px-2 rounded-lg shadow-sm flex items-center justify-center border border-white/20 transition-transform group-hover:scale-105">
+              <JNConnectLogo className="h-7 w-auto" />
             </div>
-            <span>JandC Print Shop</span>
+            <div className="flex flex-col">
+              <span className="tracking-tight text-white font-black text-xl leading-tight">
+                JNConnect
+              </span>
+              <span className="hidden sm:inline text-[11px] font-medium text-slate-300 leading-tight">
+                A QMS for JandC Internet Cafe and Services
+              </span>
+            </div>
           </Link>
           <nav className="flex items-center gap-2" aria-label="Customer navigation">
             <Link 
@@ -40,8 +49,9 @@ export function CustomerLayout({ children }: { children: ReactNode }) {
         {children}
       </main>
       <footer className="border-t bg-card py-4 text-center text-xs text-muted-foreground">
-        <div className="max-w-6xl mx-auto px-4">
-          JandC Print Shop · Mon–Sat, 8:00 AM–6:00 PM
+        <div className="max-w-6xl mx-auto px-4 space-y-1">
+          <p className="font-medium text-foreground/80">JNConnect · Internet Cafe and Printing Services</p>
+          <p>Mon–Sat, 8:00 AM–6:00 PM · Contact: 09169305712 · email: jandcnet87@gmail.com</p>
         </div>
       </footer>
     </div>

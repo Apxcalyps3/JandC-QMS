@@ -56,20 +56,23 @@ export function TrackOrder() {
           <Search className="h-4 w-4" /> Order lookup
         </div>
         <h1 className="text-3xl font-bold tracking-tight">Track your order</h1>
-        <p className="text-muted-foreground">Use the order number from your ticket to see the latest status.</p>
+        <p className="text-muted-foreground">Use the 3-digit order number from your ticket to see the latest status.</p>
       </div>
 
       <Card className="border shadow-sm">
         <CardContent className="p-5 md:p-6">
           <form onSubmit={handleSearch} className="flex flex-col gap-3 sm:flex-row sm:items-end">
             <div className="flex-1 space-y-2">
-              <label htmlFor="order-number" className="text-sm font-medium">Order number</label>
+              <label htmlFor="order-number" className="text-sm font-medium">3-Digit Order Number</label>
             <Input 
               id="order-number"
-              placeholder="e.g. JNC-12345" 
+              placeholder="e.g. 101" 
               value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="h-11 text-base"
+              maxLength={3}
+              inputMode="numeric"
+              pattern="[0-9]{3}"
+              onChange={(e) => setSearchInput(e.target.value.replace(/\D/g, "").slice(0, 3))}
+              className="h-11 text-base font-mono tracking-wider font-semibold"
             />
             </div>
             <Button type="submit" size="lg" className="py-6 px-8">
@@ -96,7 +99,7 @@ export function TrackOrder() {
             <Package className="mt-0.5 h-5 w-5 shrink-0" />
             <div>
               <h3 className="font-semibold">Order not found</h3>
-              <p className="mt-1 text-sm">Check the order number and try again.</p>
+              <p className="mt-1 text-sm">Check your 3-digit order number (e.g. 101, 102) and try again.</p>
             </div>
           </CardContent>
         </Card>
@@ -104,6 +107,31 @@ export function TrackOrder() {
 
       {order && (
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
+          {/* Step 5.1: Notified once order is ready for pickup */}
+          {order.status === "completed" && (
+            <div className="rounded-2xl border-2 border-emerald-500 bg-emerald-50 p-5 shadow-md flex items-start gap-4 animate-pulse">
+              <div className="h-12 w-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <CheckCircle2 className="w-7 h-7" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-emerald-600 text-white text-xs font-bold">
+                    ORDER READY FOR PICKUP
+                  </Badge>
+                  <span className="text-xs text-emerald-800 font-semibold">
+                    Ticket: {order.orderNumber}
+                  </span>
+                </div>
+                <h3 className="text-lg font-black text-emerald-950">
+                  Your documents are finished printing and ready!
+                </h3>
+                <p className="text-xs text-emerald-900 leading-relaxed">
+                  Please proceed to the <strong>JandC Internet Cafe & Printing Counter</strong>. Show your ticket number <strong>{order.orderNumber}</strong> to our staff to claim your prints.
+                </p>
+              </div>
+            </div>
+          )}
+
           <Card className="overflow-hidden">
             <CardHeader className="border-b bg-muted/25 pb-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -163,8 +191,16 @@ export function TrackOrder() {
                         <span className="font-medium">{format(new Date(order.createdAt), "MMM d, h:mm a")}</span>
                       </li>
                       <li className="flex justify-between">
-                        <span className="text-muted-foreground">Customer:</span>
-                        <span className="font-medium">{order.customerName}</span>
+                        <span className="text-muted-foreground">
+                          {order.customerName?.startsWith("Walk-in") || order.customerName?.startsWith("Order #")
+                            ? "Tracking Identifier:"
+                            : "Customer:"}
+                        </span>
+                        <span className="font-medium">
+                          {order.customerName?.startsWith("Walk-in") || order.customerName?.startsWith("Order #")
+                            ? `Order #${order.orderNumber} (Walk-in)`
+                            : order.customerName}
+                        </span>
                       </li>
                     </ul>
                   </div>

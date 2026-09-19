@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 220" width="840" height="440" fill="none">
+  <!-- 1. The Inner 'J': Rounded end cap -> curves down -> goes straight up -> turns 90deg right -->
+  <path
+    d="M 52 140 C 52 166, 62 178, 82 178 C 96 178, 104 168, 104 146 L 104 92 L 130 92"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- 2. The Outer Continuous Ribbon: Starts at left tip -> loops under J -> arches high over N -> sweeps down-right -> loops up into antenna -->
+  <path
+    d="M 26 148 C 26 186, 46 204, 82 204 C 114 204, 128 186, 128 148 L 128 118 C 128 76, 156 50, 194 50 C 218 50, 236 66, 254 106 L 272 148 C 280 166, 288 204, 312 204 C 324 204, 332 194, 332 178 L 332 136"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- 3. The Inner 'N': Two vertical stems flat on the baseline -->
+  <path
+    d="M 156 204 L 156 116"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="butt"
+  />
+  <path
+    d="M 156 116 C 156 94, 170 84, 188 98 L 246 166"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M 182 204 L 182 120"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="butt"
+  />
+
+  <!-- 4. Antenna Transmitter Node -->
+  <circle cx="332" cy="125" r="9.5" fill="#8B1D24" />
+
+  <!-- 5. Broadcast Signal Waves (Upper-Right: 3 concentric arcs) -->
+  <path
+    d="M 323 101 A 26 26 0 0 1 355 138"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
+  <path
+    d="M 316 82 A 46 46 0 0 1 372 148"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
+  <path
+    d="M 309 63 A 66 66 0 0 1 389 158"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
+
+  <!-- 6. Broadcast Signal Waves (Lower-Right: 2 concentric arcs) -->
+  <path
+    d="M 349 145 A 26 26 0 0 1 321 149"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
+  <path
+    d="M 362 160 A 46 46 0 0 1 313 167"
+    stroke="#8B1D24"
+    stroke-width="14"
+    stroke-linecap="round"
+  />
+</svg>
